@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+dist
+docs/.vitepress/dist
+docs/.vitepress/cache
+*.local
+.claude
+_已合并页面备份-*
+*.log

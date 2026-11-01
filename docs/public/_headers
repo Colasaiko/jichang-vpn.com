@@ -1,0 +1,46 @@
+# Cloudflare Pages & Workers Custom Response Headers
+# Production Domain: https://jichang-vpn.com
+
+# 1. Global Baseline Security Headers for All Routes
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  X-XSS-Protection: 1; mode=block
+
+# 2. Immutable Long-Term Caching for Hashed Bundles (Vite/VitePress)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 3. Optimized Caching for Site Images & Brand Logos
+/images/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+# 4. Open Graph Social Share Image
+/images/og-image.jpg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/og-image.jpg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+# 5. Site Favicon & Web Fonts
+/favicon.svg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+# 6. SEO Feed & Crawl Directives
+/sitemap.xml
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+/robots.txt
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# 7. Affiliate Go Transition Pages Protection (Noindex, Nofollow, No Cache)
+/go/*
+  X-Robots-Tag: noindex, nofollow, nosnippet, noarchive
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# 8. 404 Not Found Page Headers
+/404.html
+  Cache-Control: no-cache, no-store, must-revalidate
+  X-Robots-Tag: noindex, nofollow

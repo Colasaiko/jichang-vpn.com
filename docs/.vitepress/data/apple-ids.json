@@ -1,0 +1,24 @@
+{
+  "updatedAt": "2026-11-01",
+  "notice": "本站自有账号由本站注册和维护，密码不定期更换。如果显示密码错误或账号被锁，说明正在维护，请稍后再来看。",
+  "external": [
+    {
+      "name": "二毛博客 · 免费美区 Apple ID",
+      "url": "https://www.ermao.net/blog/freeappleid/",
+      "desc": "第三方网站整理的美区 Apple ID 共享列表，账号多、更新频繁。",
+      "note": "该网站与本站无关，账号由对方维护，本站不保证可用和安全。"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "us-1",
+      "region": "美国",
+      "account": "",
+      "password": "",
+      "status": "pending",
+      "checkedAt": "",
+      "purchased": [],
+      "note": ""
+    }
+  ]
+}

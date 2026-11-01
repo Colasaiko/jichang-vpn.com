@@ -1,0 +1,7 @@
+# robots.txt for 机场VPN (jichang-vpn.com)
+
+User-agent: *
+Allow: /
+
+# XML Sitemap 官方路径
+Sitemap: https://jichang-vpn.com/sitemap.xml
