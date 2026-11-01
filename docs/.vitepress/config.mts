@@ -1,3 +1,6 @@
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, type HeadConfig } from 'vitepress'
 import providers from './data/providers.json'
 
@@ -29,6 +32,39 @@ const fixAffHtml = (html: string) => html.replace(/<a\b[^>]*>/g, fixAffTag)
 
 // 官方正式生产域名配置
 const SITE_URL = process.env.SITE_URL || 'https://jichang-vpn.com'
+
+// ---------- Sitemap：按栏目设定优先级与更新频率，并附上页面里的图片 ----------
+const DOCS_DIR = fileURLToPath(new URL('..', import.meta.url))
+type ChangeFreq = 'daily' | 'weekly' | 'monthly' | 'yearly'
+const SITEMAP_RULES: [RegExp, number, ChangeFreq][] = [
+  [/^$/, 1.0, 'daily'],
+  [/^recommendations\/$/, 0.9, 'weekly'],
+  [/^brands\/$/, 0.9, 'weekly'],
+  [/^brands\//, 0.8, 'weekly'],
+  [/^tools\/(free-us-apple-id|coupon-center)$/, 0.8, 'weekly'],
+  [/^blog\/feiv-double-eleven/, 0.8, 'daily'],
+  [/^tools\//, 0.7, 'monthly'],
+  [/^blog\/daily-monitor/, 0.5, 'monthly'],
+  [/^(blog|guides|clash|vpn)\/$/, 0.7, 'weekly'],
+  [/^(blog|guides|clash|vpn)\//, 0.6, 'monthly'],
+  [/^(about|privacy)\/$/, 0.3, 'yearly']
+]
+const sitemapRule = (url: string) => SITEMAP_RULES.find(([re]) => re.test(url)) || [null, 0.5, 'monthly' as ChangeFreq]
+// 找到网址对应的 Markdown 源文件，取出文中引用的站内图片
+const sourceOf = (url: string) =>
+  [`${url}.md`, `${url}index.md`, `${url}/index.md`].map((p) => path.join(DOCS_DIR, p)).find((p) => fs.existsSync(p))
+const imagesOf = (url: string) => {
+  const file = sourceOf(url)
+  if (!file) return []
+  const src = fs.readFileSync(file, 'utf8')
+  const found = [
+    ...[...src.matchAll(/!\[[^\]]*\]\((\/images\/[^)\s]+)/g)].map((m) => m[1]),
+    ...[...src.matchAll(/<img[^>]*\ssrc="(\/images\/[^"]+)"/g)].map((m) => m[1])
+  ]
+  return [...new Set(found)]
+    .filter((p) => fs.existsSync(path.join(DOCS_DIR, 'public', p)))
+    .map((p) => ({ url: SITE_URL + encodeURI(p) }))
+}
 const SITE_NAME = '机场VPN'
 const DEFAULT_DESC = '机场VPN - 专注于网络传输协议、网络节点工具选型与技术实战的中文博客与 Wiki 知识库'
 const OG_IMAGE_URL = `${SITE_URL}/images/og-image.jpg`
@@ -52,8 +88,17 @@ export default defineConfig({
   // XML Sitemap 自动生成（依赖生产域名）
   sitemap: {
     hostname: SITE_URL,
-    // 跳转页 /go/ 已设 noindex，不放进 sitemap
-    transformItems: (items) => items.filter((item) => !/^\/?(go(\/|$)|404)/.test(item.url))
+    // 跳转页 /go/ 已设 noindex，不放进 sitemap；其余页面补上优先级、更新频率和图片
+    transformItems: (items) =>
+      items
+        .filter((item) => !/^\/?(go(\/|$)|404)/.test(item.url))
+        .map((item) => {
+          const url = item.url.replace(/^\//, '')
+          const [, priority, changefreq] = sitemapRule(url)
+          const img = imagesOf(url)
+          return { ...item, priority, changefreq, ...(img.length ? { img } : {}) }
+        })
+        .sort((a, b) => b.priority - a.priority || a.url.localeCompare(b.url))
   },
 
   head: [
