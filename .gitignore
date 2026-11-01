@@ -6,4 +6,5 @@ docs/.vitepress/cache
 *.local
 .claude
 _已合并页面备份-*
+_内部资料/
 *.log
