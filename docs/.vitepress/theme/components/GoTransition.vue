@@ -110,7 +110,7 @@ function copyCode(code: string) {
         />
         <div class="brand-hero-meta">
           <div class="brand-title-line">
-            <h2 class="brand-title-text">{{ provider.name }}</h2>
+            <h1 class="brand-title-text">前往 {{ provider.name }} 官网</h1>
             <span class="line-badge">{{ provider.lineType || 'IPLC专线' }}</span>
           </div>
           <p class="brand-price-text">入门参考：{{ provider.startPrice }}</p>
@@ -123,7 +123,7 @@ function copyCode(code: string) {
       <div class="disclosure-alert-box">
         <div class="disclosure-header">
           <span class="alert-icon">💡</span>
-          <h4 class="alert-heading">赞助与佣金透明化特别说明</h4>
+          <h2 class="alert-heading">赞助与佣金透明化特别说明</h2>
         </div>
         <p class="alert-desc">
           您即将离开<strong>「机场VPN」</strong>前往<strong>【{{ provider.name }}】</strong>官方网站。若您通过本站链接选购套餐，我们可能会从服务商处获得一笔微薄的推广佣金，用以支付本站独立测试服务器、海外多节点测速带宽以及工具箱持续维护的日常开销。
@@ -244,6 +244,7 @@ function copyCode(code: string) {
   border: none !important;
   font-size: 1.5rem !important;
   font-weight: 800;
+  line-height: 1.3 !important;
   color: var(--site-text-primary);
 }
 
@@ -295,6 +296,7 @@ function copyCode(code: string) {
   border: none !important;
   font-size: 1.05rem !important;
   font-weight: 700;
+  line-height: 1.4 !important;
   color: var(--site-text-primary);
 }
 

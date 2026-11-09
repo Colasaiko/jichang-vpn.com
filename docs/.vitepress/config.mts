@@ -239,7 +239,7 @@ export default defineConfig({
 
   themeConfig: {
     siteTitle: '机场VPN',
-    logo: '/favicon.svg',
+    logo: { src: '/favicon.svg', alt: '机场VPN' },
 
     nav: [
       { text: '首页', link: '/' },
